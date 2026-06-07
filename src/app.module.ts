@@ -1,31 +1,34 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
-import { PrismaModule } from './prisma/prisma.module';
 import { EventsModule } from './events/events.module';
 import { TicketsModule } from './tickets/tickets.module';
-import { PaymentsModule } from './payments/payments.module';
+import { UsersModule } from './users/users.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-
-    ThrottlerModule.forRoot({
-      throttlers: [{ ttl: 60, limit: 100 }],
+    // ✅ CONFIG MODULE (VERY IMPORTANT FOR JWT)
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
 
+    // ✅ RATE LIMITING (WORKING VERSION)
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60,
+        limit: 10,
+      },
+    ]),
+
+    // ✅ YOUR MODULES
     PrismaModule,
     AuthModule,
-    UsersModule,
     EventsModule,
     TicketsModule,
-    PaymentsModule,
+    UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
