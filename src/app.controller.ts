@@ -6,7 +6,7 @@ export class AppController {
   getRoot() {
     return {
       message: '🚀 Eventful API is live!',
-      docs: '/api/docs'
+      docs: '/api/docs',
     };
   }
 }
