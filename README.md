@@ -1,98 +1,193 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Eventful Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Eventful is a backend API for managing events, ticket purchases, QR-based ticket verification, analytics, reminders, and protected access for creators and attendees.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Features
 
-## Description
+- JWT authentication and authorization
+- Event creation and event listing
+- Shareable event links
+- Ticket purchase flow
+- Simulated payment endpoint
+- QR code generation for purchased tickets
+- QR code verification endpoint
+- Event analytics
+- Event reminder/notification endpoint
+- Rate limiting with Nest Throttler
+- Swagger API documentation
+- Unit and integration tests
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Project setup
+- NestJS
+- TypeScript
+- Prisma ORM
+- PostgreSQL (Neon)
+- JWT
+- Swagger
+- Jest + Supertest
 
-```bash
-$ npm install
+## API Documentation
+
+When running locally, Swagger is available at:
+
+- [Local Swagger Docs](http://localhost:3000/api/docs)
+
+After deployment, Swagger will be available at:
+
+- [Production Swagger Docs](https://YOUR-RENDER-URL/api/docs)
+
+## Authentication
+
+### Register
+`POST /auth/register`
+
+### Login
+`POST /auth/login`
+
+Use the returned token in Swagger with:
+
+```text
+Bearer YOUR_ACCESS_TOKEN
 ```
 
-## Compile and run the project
+## Main Endpoints
 
-```bash
-# development
-$ npm run start
+### Auth
+- `POST /auth/register`
+- `POST /auth/login`
 
-# watch mode
-$ npm run start:dev
+### Events
+- `POST /events` — create event
+- `GET /events` — list all upcoming events
+- `GET /events/:id/share` — get shareable event link
+- `GET /events/:id/analytics` — view event analytics
+- `GET /events/reminders` — view event reminders
 
-# production mode
-$ npm run start:prod
+### Tickets
+- `POST /tickets/pay` — simulate payment
+- `POST /tickets/buy` — purchase ticket
+- `GET /tickets/verify?qrCode=...` — verify QR/ticket
+
+## Ticket Purchase Flow
+
+1. User logs in
+2. User authorizes with JWT
+3. User pays through simulated payment endpoint
+4. User buys ticket
+5. QR code is generated
+6. QR code is scanned and verified through the API
+
+## QR Code Verification
+
+When a ticket is purchased, the API generates a QR code image.  
+That QR code encodes a verification URL. When scanned, it opens the ticket verification endpoint and validates whether the ticket is still valid.
+
+## Analytics
+
+The analytics endpoint returns event-level stats such as:
+
+- total tickets sold
+- total attendees
+
+Example:
+
+```http
+GET /events/:id/analytics
 ```
 
-## Run tests
+## Notifications / Reminders
 
-```bash
-# unit tests
-$ npm run test
+The reminders endpoint returns upcoming event reminder information based on event date.
 
-# e2e tests
-$ npm run test:e2e
+Example:
 
-# test coverage
-$ npm run test:cov
+```http
+GET /events/reminders
 ```
 
-## Deployment
+## Payments
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Payments are currently simulated for assignment/demo purposes.
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Example:
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```http
+POST /tickets/pay
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Rate Limiting
 
-## Resources
+Basic rate limiting is implemented using NestJS Throttler.
 
-Check out a few resources that may come in handy when working with NestJS:
+## Testing
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+This project includes:
 
-## Support
+- unit tests
+- integration tests
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Run tests with:
 
-## Stay in touch
+```bash
+npm run test
+npm run test:e2e
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Local Setup
 
-## License
+### 1. Install dependencies
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+npm install
+```
+
+### 2. Configure environment variables
+
+Create a `.env` file with:
+
+```env
+DATABASE_URL=your_neon_database_url
+DIRECT_URL=your_neon_direct_url
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=1d
+PAYSTACK_SECRET_KEY=your_paystack_key
+PORT=3000
+NODE_ENV=development
+```
+
+### 3. Generate Prisma client
+
+```bash
+npx prisma generate
+```
+
+### 4. Push schema to database
+
+```bash
+npx prisma db push
+```
+
+### 5. Start the app
+
+```bash
+npm run start:dev
+```
+
+## Notes
+
+- If Neon is idle, the first request may fail while the database wakes up. Retrying usually resolves it.
+- Payment is simulated rather than fully integrated with Paystack.
+- QR verification is API-based and designed for backend validation.
+
+## Future Improvements
+
+- Real Paystack transaction initialization and verification
+- Email/SMS reminders
+- Redis caching layer
+- More extensive test coverage
+- Production-ready check-in / scan-once logic
+
+## Author
+
+Cynthia Okechukwu
