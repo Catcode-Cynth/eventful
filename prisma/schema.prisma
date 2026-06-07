@@ -1,0 +1,64 @@
+enum Role {
+  EVENTEE
+  CREATOR
+}
+
+enum EventStatus {
+  UPCOMING
+  CLOSED
+  CANCELLED
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String
+  lastName      String?
+  role          Role      @default(EVENTEE)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  eventsCreated Event[]
+  tickets       Ticket[]
+
+  @@map("users")
+}
+
+model Event {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  date        DateTime
+  location    String
+  price       Float
+  capacity    Int
+
+  status      EventStatus   @default(UPCOMING)
+
+  creatorId   String
+  creator     User          @relation(fields: [creatorId], references: [id])
+  tickets     Ticket[]
+
+  @@map("events")
+}
+
+model Ticket {
+  id        String   @id @default(cuid())
+  qrCode    String   @unique
+  userId    String
+  eventId   String
+
+  user      User     @relation(fields: [userId], references: [id])
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  @@map("tickets")
+}

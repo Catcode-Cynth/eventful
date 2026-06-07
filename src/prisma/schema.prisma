@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String?
+  lastName      String?
+  role          Role      @default(EVENTEE)
+  phoneNumber   String?
+  isVerified    Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  eventsCreated Event[]
+  tickets       Ticket[]
+  payments      Payment[]
+
+  @@map("users")
+}
+
+model Event {
+  id              String    @id @default(cuid())
+  title           String
+  description     String
+  date            DateTime
+  location        String
+  price           Float
+  capacity        Int
+  imageUrl        String?
+  status          EventStatus @default(UPCOMING)
+  reminderDays    Int?      // e.g 1, 7 days before
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  creatorId       String
+  creator         User      @relation(fields: [creatorId], references: [id])
+
+  tickets         Ticket[]
+  payments        Payment[]
+
+  @@map("events")
+}
+
+model Ticket {
+  id          String      @id @default(cuid())
+  qrCode      String
+  status      TicketStatus @default(VALID)
+  scanned     Boolean     @default(false)
+  scannedAt   DateTime?
+
+  userId      String
+  eventId     String
+  createdAt   DateTime    @default(now())
+
+  user        User        @relation(fields: [userId], references: [id])
+  event       Event       @relation(fields: [eventId], references: [id])
+
+  @@map("tickets")
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  amount          Float
+  reference       String        @unique
+  status          PaymentStatus @default(PENDING)
+  paystackRef     String?
+
+  userId          String
+  eventId         String
+  createdAt       DateTime      @default(now())
+
+  user            User          @relation(fields: [userId], references: [id])
+  event           Event         @relation(fields: [eventId], references: [id])
+
+  @@map("payments")
+}
+
+enum Role {
+  CREATOR
+  EVENTEE
+}
+
+enum EventStatus {
+  UPCOMING
+  ONGOING
+  COMPLETED
+  CANCELLED
+}
+
+enum TicketStatus {
+  VALID
+  USED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+}
