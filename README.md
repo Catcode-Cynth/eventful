@@ -188,6 +188,23 @@ npm run start:dev
 - More extensive test coverage
 - Production-ready check-in / scan-once logic
 
+  The backend system has been fully implemented and tested locally using Swagger.
+
+Core features include:
+- Authentication (JWT)
+- Event creation and management
+- Ticket purchase with QR code generation
+- QR code verification
+- Analytics and reminders
+- Simulated payment flow
+- Unit and integration tests
+
+The application has been deployed on Render.
+
+Note: Swagger documentation works correctly in the local environment. The deployed version may not display the Swagger UI due to production environment configuration, but all endpoints are implemented and accessible.
+
+
+
 ## Author
 
 Cynthia Okechukwu
