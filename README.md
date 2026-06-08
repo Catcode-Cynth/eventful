@@ -188,7 +188,11 @@ npm run start:dev
 - More extensive test coverage
 - Production-ready check-in / scan-once logic
 
+HEAD
   The backend system has been fully implemented and tested locally using Swagger.
+
+The backend system has been fully implemented and tested locally using Swagger.
+4165d1b (fix: correct NestJS build entry point and resolve Render 404 startup issue)
 
 Core features include:
 - Authentication (JWT)

@@ -7,8 +7,8 @@
 
     "types": ["jest", "node"],
 
-    "rootDir": "./",
-    "outDir": "./dist",
+    "rootDir": "src",
+    "outDir": "dist",
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

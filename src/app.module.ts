@@ -10,12 +10,10 @@ import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
-    // ✅ CONFIG MODULE (VERY IMPORTANT FOR JWT)
     ConfigModule.forRoot({
       isGlobal: true,
     }),
 
-    // ✅ RATE LIMITING (WORKING VERSION)
     ThrottlerModule.forRoot([
       {
         ttl: 60,
@@ -23,7 +21,6 @@ import { PrismaModule } from './prisma/prisma.module';
       },
     ]),
 
-    // ✅ YOUR MODULES
     PrismaModule,
     AuthModule,
     EventsModule,
