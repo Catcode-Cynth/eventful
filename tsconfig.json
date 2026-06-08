@@ -3,27 +3,25 @@
     "module": "commonjs",
     "target": "ES2021",
     "moduleResolution": "node",
-    
 
-    "types": ["jest", "node"],
+    "rootDir": "./",
 
-    "rootDir": "src",
-    "outDir": "dist",
+    "outDir": "./dist",
 
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-
     "strict": true,
-    "strictPropertyInitialization": false,
-
-    "skipLibCheck": true,
-    "sourceMap": true,
-    "incremental": true,
-    "resolveJsonModule": true
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "prisma/**/*.ts", "test/**/*.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "test",
+    "prisma"
+  ]
 }
