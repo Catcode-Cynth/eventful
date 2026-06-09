@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { AppController } from './app.controller';
 
 import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
@@ -9,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
+    controllers: [AppController],
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
@@ -18,6 +20,10 @@ import { PrismaModule } from './prisma/prisma.module';
       {
         ttl: 60,
         limit: 10,
+
+
+
+        
       },
     ]),
 
