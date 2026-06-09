@@ -13,7 +13,7 @@ export class RegisterDto {
   firstName!: string;
 
   @IsString()
-  @IsOptional()
+  @IsOptional()           // ← This makes it truly optional
   lastName?: string;
 
   @IsEnum(['CREATOR', 'EVENTEE'])
